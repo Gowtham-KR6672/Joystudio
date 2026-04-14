@@ -24,13 +24,13 @@ const About = () => {
 
         <motion.div variants={fadeUp} className="prose prose-zinc prose-xl mx-auto font-body text-on-surface-variant font-light max-w-3xl">
             <p className="text-3xl leading-relaxed font-light text-on-surface first-letter:text-8xl first-letter:font-editorial first-letter:text-primary first-letter:float-left first-letter:pr-6 first-letter:mr-2">
-                Founded on the principle that true luxury lies in simplicity, Joy Studio emerged from a passion for capturing unscripted elegance. For over a decade, we have dedicated ourselves to the mastery of light, space, and human connection.
+                Founded on the principle that true luxury lies in simplicity, Red Studio emerged from a passion for capturing unscripted elegance. For over a decade, we have dedicated ourselves to the mastery of light, space, and human connection.
             </p>
             <p className="mt-8">
                 Our studio was conceived not merely as a photography business, but as an atelier where milestones are immortalized in their truest essence. We draw deep inspiration from high editorial fashion, architectural symmetry, and the classical painters of the Renaissance who understood that shadows are just as vital as light.
             </p>
             <p className="mt-8">
-                To work with Joy Studio is to surrender to an experience. We believe that the best imagery comes not from elaborate posing, but from a state of comfortable vulnerability. Our approach is quiet, intentional, and overwhelmingly focused on the narrative that unfolds naturally in front of our lenses. 
+                To work with Red Studio is to surrender to an experience. We believe that the best imagery comes not from elaborate posing, but from a state of comfortable vulnerability. Our approach is quiet, intentional, and overwhelmingly focused on the narrative that unfolds naturally in front of our lenses. 
             </p>
             <motion.blockquote 
                 initial={{ opacity: 0, x: -20 }}

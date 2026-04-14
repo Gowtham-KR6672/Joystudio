@@ -2,26 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const mockVideos = [
-  ...[
-    'https://www.instagram.com/reel/DSNKD6xEgu7/',
-    'https://www.instagram.com/reel/DVSFPz9Es-m/',
-    'https://www.instagram.com/reel/DTQAZ34jL-B/',
-    'https://www.instagram.com/reel/DSMUa5KDObX/',
-    'https://www.instagram.com/reel/DU-0lCQErp3/'
-  ].map((url, i) => ({ id: 101 + i, title: 'Model Reel', category: 'Model Shoots', type: 'ig', url: `${url}embed/` })),
-
-  ...[
-    'https://www.instagram.com/reel/DV2Rjmqjvgn/',
-    'https://www.instagram.com/reel/DAD78dru9YO/',
-    'https://www.instagram.com/reel/C_nQ0GBpfc2/'
-  ].map((url, i) => ({ id: 201 + i, title: 'Wedding Reel', category: 'Wedding', type: 'ig', url: `${url}embed/` })),
-
-  ...[
-    'https://www.instagram.com/reel/DLcggUbTtUX/',
-    'https://www.instagram.com/reel/DLHz5t8IMG_/'
-  ].map((url, i) => ({ id: 301 + i, title: 'Outdoor Reel', category: 'Outdoor', type: 'ig', url: `${url}embed/` }))
-];
+const rawVideos = import.meta.glob('../assets/Video/**/*.mp4', { eager: true, query: '?url', import: 'default' });
+const mockVideos = Object.entries(rawVideos).map(([path, url], idx) => {
+    const parts = path.split('/');
+    const categoryRaw = parts[parts.length - 2];
+    const category = categoryRaw === 'Modal Shoots' ? 'Model Shoots' : categoryRaw;
+    return {
+        id: idx + 1,
+        title: `${category} Reel`,
+        category,
+        url
+    };
+});
 
 const categories = ['All', 'Wedding', 'Outdoor', 'Model Shoots'];
 
@@ -30,6 +22,7 @@ const Video = () => {
   const navigate = useNavigate();
   const [filter, setFilter] = useState('All');
   const [videos, setVideos] = useState(mockVideos);
+  const [activeVideoUrl, setActiveVideoUrl] = useState(null);
 
   useEffect(() => {
     if (category) {
@@ -92,36 +85,53 @@ const Video = () => {
                 viewport={{ once: true, margin: "-50px" }}
                 exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.2 } }}
                 transition={{ duration: 0.8, ease: "easeOut" }}
-                className={`group relative overflow-hidden bg-surface-container-low rounded-xl ${vid.type === 'ig' ? 'aspect-[9/16]' : 'aspect-[21/9]'} shadow-sm`}
+                onClick={() => setActiveVideoUrl(vid.url)}
+                className={`group relative overflow-hidden bg-surface-container-low rounded-xl aspect-[9/16] shadow-sm cursor-pointer`}
               >
-               {vid.type === 'ig' ? (
-                  <iframe 
-                      src={`${vid.url}?hidecaption=true`} 
-                      className="absolute left-[-2px] w-[calc(100%+4px)]" 
-                      style={{ top: '-54px', height: 'calc(100% + 220px)' }}
-                      frameBorder="0" scrolling="no" allowtransparency="true"
-                  ></iframe>
-               ) : (
-                 <>
-                    <img src={vid.thumbnail} alt={vid.title} className="w-full h-full object-cover opacity-60 group-hover:scale-105 group-hover:opacity-80 transition-all duration-[2s] ease-out" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent flex items-center justify-center pointer-events-none">
-                        <div className="w-24 h-24 rounded-full border border-white/20 flex items-center justify-center backdrop-blur-md bg-white/5 group-hover:bg-primary-fixed/20 group-hover:border-primary-fixed/50 group-hover:scale-110 transition-all duration-500">
-                            <span className="material-symbols-outlined text-white group-hover:text-primary-fixed text-5xl ml-2 transition-colors">play_arrow</span>
-                        </div>
-                    </div>
-                    <div className="absolute bottom-0 left-0 p-12 w-full">
-                        <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                          <p className="font-label text-xs tracking-[0.3em] uppercase text-primary-fixed mb-3">{vid.category}</p>
-                          <h3 className="editorial-title text-4xl text-on-surface">{vid.title}</h3>
-                        </div>
-                    </div>
-                 </>
-               )}
+                  <video 
+                      src={vid.url} 
+                      autoPlay 
+                      loop 
+                      muted 
+                      playsInline 
+                      className="w-full h-full object-cover scale-100 group-hover:scale-105 transition-all duration-[2s] ease-out" 
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent flex items-end p-8 opacity-0 group-hover:opacity-100 transition-all duration-500 pointer-events-none">
+                      <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                        <p className="font-label text-xs tracking-[0.3em] uppercase text-primary-fixed mb-2">{vid.category}</p>
+                        <h3 className="editorial-title text-3xl text-white">{vid.title}</h3>
+                      </div>
+                  </div>
               </motion.div>
             ))}
           </AnimatePresence>
         </motion.div>
       </div>
+
+      {/* Video Playback Modal */}
+      <AnimatePresence>
+        {activeVideoUrl && (
+          <motion.div 
+            initial={{ opacity: 0 }} 
+            animate={{ opacity: 1 }} 
+            exit={{ opacity: 0 }} 
+            className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center backdrop-blur-xl"
+          >
+            <button 
+              onClick={() => setActiveVideoUrl(null)}
+              className="absolute top-6 right-6 md:top-10 md:right-10 text-white hover:text-primary z-50 p-3 bg-white/10 rounded-full transition-colors flex items-center shadow-lg hover:bg-white/20"
+            >
+              <span className="material-symbols-outlined text-2xl md:text-3xl font-light">close</span>
+            </button>
+            <video 
+              src={activeVideoUrl} 
+              autoPlay 
+              controls 
+              className="w-full h-full max-h-screen object-contain p-2 md:p-8 outline-none"
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 };

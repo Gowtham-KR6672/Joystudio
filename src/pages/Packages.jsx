@@ -77,7 +77,7 @@ const fadeUp = {
 
 const PackageCard = ({ pkg }) => {
   const [showOptions, setShowOptions] = useState(false);
-  const waText = encodeURIComponent(`Hello Joy Studio! I am interested in the ${pkg.name} starting at ${pkg.price}. Can we discuss the details?`);
+  const waText = encodeURIComponent(`Hello Red Studio! I am interested in the ${pkg.name} starting at ${pkg.price}. Can we discuss the details?`);
   const emailSub = encodeURIComponent(`Inquiry for ${pkg.name}`);
 
   return (

@@ -2,25 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const mockGallery = [
-  ...[
-    'https://www.instagram.com/p/DP-5icJkszF/',
-    'https://www.instagram.com/p/DQO6m01ko2f/',
-    'https://www.instagram.com/p/DRBYbaEiMwN/',
-    'https://www.instagram.com/p/DRT19h5ja_3/',
-    'https://www.instagram.com/p/DRdmfwXCDvd/',
-    'https://www.instagram.com/p/DSq36AcCQHl/'
-  ].map((url, i) => ({
-    id: 101 + i,
-    category: 'Model Shoots',
-    type: 'ig',
-    url: `${url}embed/`
-  })),
-  { id: 1, category: 'Bridal', url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB3M9I2tS78iQ98s6x34Xk781YgE92r9o39g19A3n2x9388B9m82E2b781X9487b282h2x983A', title: 'Elegant Bridal Portrait' },
-  { id: 2, category: 'Couple', url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuC7Q981X9M18xX3B2Y83g381n98R9810X939T23971E9X93M93t8z90X939c9U9G', title: 'Sunset Couple' },
-  { id: 4, category: 'Bridal', url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAPMdg5LclVVWNWUVNyu_pMcg2DGzhCA0PMHtpmg122Akliec4zHt0xbMiEKNEevPYd8x5fJmJdwijS5pul7cK9vygCdHCGH4eyLZ5cNj0RwJBLb3S-lbHN-A4sLUHSkq_RWD2t6boDvWvMJ39Cv54aAv831ZXFWl6ircD2yl3xTZsJ0VhLNxbYgLRManGhGatI-h9ShieX3u65w9zu55TFN4xo8N0throst80FfUex8qYYwc5LLv036-IxHVSzOTCpXKwV1A1hMc8', title: 'Modern Bride' },
-  { id: 5, category: 'Groom', url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDQHQnW7e7tNemFBEjKS4rAmriSqx9zdxPygcBp4IYSiqGyybFkVOcsemsbchun7wxHmNip0RpXK1TD1jg8Pl8cfOigkJCMNWjLeoznAfZj6YTZixPo-zvOuEs9gpxeQyjsL3VoAAoXoQF2xMSKgY9mxQnt8D2ORXyjz_DzE0uBhIh6dHu-ImOleabTK2tjVMUA8Qh7rwmV_JGk2eJID3K952XgIdY72ds1o49WITkYS_xX5uhvpIWkj4WW75NAmNzTG8EJMyqV7KE', title: 'The Groom' }
-];
+const rawImages = import.meta.glob('../assets/Gallery/**/*.{jpg,jpeg,png,webp}', { eager: true, query: '?url', import: 'default' });
+const mockGallery = Object.entries(rawImages).map(([path, url], idx) => {
+    const parts = path.split('/');
+    const category = parts[parts.length - 2];
+    return {
+        id: idx + 1,
+        category,
+        url,
+        title: `${category} Portrait`
+    };
+});
 
 const categories = ['All', 'Bridal', 'Couple', 'Groom', 'Model Shoots'];
 
@@ -100,24 +92,13 @@ const Gallery = () => {
                 transition={{ duration: 0.5, ease: "easeOut" }}
                 className="group relative overflow-hidden bg-surface-container-low rounded-xl aspect-[4/5] cursor-pointer shadow-sm hover:shadow-xl hover:shadow-primary/10 transition-all duration-500"
               >
-                {img.type === 'ig' ? (
-                  <iframe 
-                      src={`${img.url}?hidecaption=true`} 
-                      className="absolute left-[-2px] w-[calc(100%+4px)]" 
-                      style={{ top: '-54px', height: 'calc(100% + 220px)' }}
-                      frameBorder="0" scrolling="no" allowtransparency="true"
-                  ></iframe>
-                ) : (
-                  <>
-                    <img src={img.url} alt={img.title} className="w-full h-full object-cover transition-transform duration-[2s] ease-out group-hover:scale-110" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-8 opacity-0 group-hover:opacity-100 transition-all duration-500">
+                  <img src={img.url} alt={img.title} className="w-full h-full object-cover transition-transform duration-[2s] ease-out group-hover:scale-110" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-8 opacity-0 group-hover:opacity-100 transition-all duration-500">
                       <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
                         <h3 className="editorial-title text-3xl text-white mb-2">{img.title}</h3>
                         <p className="font-label text-xs tracking-[0.3em] uppercase text-primary-fixed">{img.category}</p>
                       </div>
-                    </div>
-                  </>
-                )}
+                  </div>
               </motion.div>
             ))}
           </AnimatePresence>

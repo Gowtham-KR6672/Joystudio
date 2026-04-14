@@ -1,5 +1,5 @@
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import Home from './pages/Home';
@@ -14,9 +14,20 @@ import Contact from './pages/Contact';
 import Packages from './pages/Packages';
 import AdminDashboard from './pages/AdminDashboard';
 
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }, [pathname]);
+
+  return null;
+};
+
 function App() {
   return (
     <div className="min-h-screen flex flex-col font-body bg-surface text-on-surface selection:bg-primary-container selection:text-on-primary-container">
+      <ScrollToTop />
       <Navbar />
       <main className="flex-grow">
         <Routes>

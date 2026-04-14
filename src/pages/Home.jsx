@@ -2,6 +2,13 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useScroll, useTransform } from 'framer-motion';
 
+import homeHero from '../assets/Home/Home.webp.jpg';
+import philosophyImg from '../assets/Wedding/Traditional/1.jpg';
+import featureWeddings from '../assets/Wedding/Outdoor/1.jpg';
+import featureBaby from '../assets/Baby/Baby Shower/1.jpg';
+import featureVideo from '../assets/Gallery/Couple/1.jpg';
+import featureGallery from '../assets/Gallery/Model Shoots/11.webp.jpg';
+
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
   visible: { opacity: 1, y: 0, transition: { duration: 1, ease: [0.16, 1, 0.3, 1] } }
@@ -24,14 +31,15 @@ const Home = () => {
     <>
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
         <motion.div style={{ y: heroParallax, scale: imgParallax }} className="absolute inset-0 z-0 origin-bottom">
-          <img className="w-full h-full object-cover grayscale-[30%] brightness-90" alt="High-key editorial portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDmJVdwNc5Vi40rH72KSfsjHzdu_E77O56v6rgjitkoM8e5t_bVtbSkwLXwLrXmV8trTzF2sVs3sWAE1V06EUvfS3WAXGMKdZt3Xk0RhbpFW2ExTAayEgN5n-Xcju49E8f92GabK58Rf6NMGEOEyMglFrse36ztbMfx132Q0ockl5CnB-8_7yOZEK69XSECvJ8958kb5BsSUWRkfFEV3fkp1p9wWxZOky8fecVcJHcj6U7pd31x1H6VAEW-oaVbqftrJ_bPSiAJuL0"/>
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-surface/30 to-surface"></div>
+          <img className="w-full min-h-[115vh] md:min-h-full object-cover object-top md:object-[center_15%] grayscale-[10%] brightness-100 transition-all duration-1000" alt="High-key editorial portrait" src={homeHero}/>
+          <div className="absolute inset-0 bg-surface/10 bg-gradient-to-b from-transparent via-transparent to-surface mix-blend-normal"></div>
         </motion.div>
 
         <motion.div 
           initial="hidden" animate="visible" variants={staggerContainer}
           className="relative z-10 text-center px-6 mt-20"
         >
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-white/60 via-white/20 to-transparent blur-xl md:-inset-x-32 md:-inset-y-16 z-[-1] pointer-events-none dark:from-black/60 dark:via-black/20"></div>
           <motion.h1 variants={fadeUp} className="editorial-title text-6xl md:text-9xl text-on-surface font-light mb-8 leading-none tracking-tight">
             Capturing the <br/><span className="italic relative inline-block text-primary"><motion.span initial={{ width: 0 }} animate={{ width: '100%' }} transition={{ duration: 1.5, delay: 0.5 }} className="absolute bottom-4 left-0 h-1 bg-primary/20"></motion.span>Joyful</span> Moment
           </motion.h1>
@@ -64,7 +72,7 @@ const Home = () => {
           <div className="relative">
             <motion.div variants={fadeUp} className="aspect-[3/4] bg-surface overflow-hidden rounded-xl shadow-2xl relative group">
               <div className="absolute inset-0 bg-primary/10 group-hover:bg-transparent transition-colors duration-700 z-10 pointer-events-none"></div>
-              <img className="w-full h-full object-cover scale-105 group-hover:scale-100 transition-transform duration-[1.5s]" alt="Philosophy" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA661r-g3OSjYbmbL37NhxzFhk-M36ZGhlEzta9Adhimo4_cde16H4JQKWvtRtZ-Xk6gENecWd6Cjbpwu22Qj7oKwGnsp73KDpNqvun0hnyeDHD7Lsjn80MJao89L-9YPXCMlcnHfgDoWjbIiB8xem-dttE_I16zC_quHjBRH0nwx1Vi6mqZYlazeNyPMWipKL34A9hh-jiskv_B2z4NG9FmiWxzogzFRnAdWiVKpe7t8gnk0ZOnya7JVS02oM7owNzJJcMJVv3eQs"/>
+              <img className="w-full h-full object-cover scale-105 group-hover:scale-100 transition-transform duration-[1.5s]" alt="Philosophy" src={philosophyImg}/>
             </motion.div>
           </div>
         </motion.div>
@@ -82,10 +90,10 @@ const Home = () => {
 
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={staggerContainer} className="grid grid-cols-1 md:grid-cols-12 gap-8 md:h-[900px]">
             {[
-              { title: 'Weddings', span: 'md:col-span-8', img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDQHQnW7e7tNemFBEjKS4rAmriSqx9zdxPygcBp4IYSiqGyybFkVOcsemsbchun7wxHmNip0RpXK1TD1jg8Pl8cfOigkJCMNWjLeoznAfZj6YTZixPo-zvOuEs9gpxeQyjsL3VoAAoXoQF2xMSKgY9mxQnt8D2ORXyjz_DzE0uBhIh6dHu-ImOleabTK2tjVMUA8Qh7rwmV_JGk2eJID3K952XgIdY72ds1o49WITkYS_xX5uhvpIWkj4WW75NAmNzTG8EJMyqV7KE', link: '/services/weddings', subtitle: 'Eternal Vows & Grandeur' },
-              { title: 'Baby', span: 'md:col-span-4', img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAPMdg5LclVVWNWUVNyu_pMcg2DGzhCA0PMHtpmg122Akliec4zHt0xbMiEKNEevPYd8x5fJmJdwijS5pul7cK9vygCdHCGH4eyLZ5cNj0RwJBLb3S-lbHN-A4sLUHSkq_RWD2t6boDvWvMJ39Cv54aAv831ZXFWl6ircD2yl3xTZsJ0VhLNxbYgLRManGhGatI-h9ShieX3u65w9zu55TFN4xo8N0throst80FfUex8qYYwc5LLv036-IxHVSzOTCpXKwV1A1hMc8', link: '/services/baby', subtitle: 'New Beginnings' },
-              { title: 'Video', span: 'md:col-span-4', img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCnu7ew3NHncMx_tA4aUt0Z-K_G0e_w30uI2xrLvopIyQTZqUMc7Ekb8oYwkmYnP_hNJ8UvDTxJzE-fp610AFLxAR2GO6aZ5JXcaSFCGfDsc_r2eTOmy6AF4HTGD0sGWdeKV5OLI-UJjxyfz-guBU_k7TwprhiUuAsIj_C8Rnu8t0mm8t83aJ1vBzV5WrkC2npXdQG3hPxzbibS5fuvMrnCNP9QEj9qpBwlf4q1U2OQrYUubgiF-iJzOjwzbQsFSgOePboQlGA-88c', link: '/video', subtitle: 'Cinematic Frames' },
-              { title: 'Gallery', span: 'md:col-span-8', img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBVffr9XR7X6uqkvvP36zHi_VFpG6S2Yr4IyWJeV_8XhBDLt_7ezRmRk0dvEGjGXrIplA6Ye86HPn9aPVcVfk3royGWjLRQAA3J273P0q1z6a6lhCO-cDGKy0ogLKT97TnydtopK6SLKaTU_qoUllu4eMOoQkLv48cLrifuSkQzLU5b6xtYohQLaizYn_RSm02tn0NW6ichxJqaZUEFQ1g-T_yZi75YwbeEG9x6Doh4uVYcKn-qJSsL62_apieLZjNtwu8RK3fvOXg', link: '/gallery', subtitle: 'Editorial Curations' },
+              { title: 'Weddings', span: 'md:col-span-8', img: featureWeddings, link: '/services/weddings', subtitle: 'Eternal Vows & Grandeur' },
+              { title: 'Baby', span: 'md:col-span-4', img: featureBaby, link: '/services/baby', subtitle: 'New Beginnings' },
+              { title: 'Video', span: 'md:col-span-4', img: featureVideo, link: '/video', subtitle: 'Cinematic Frames' },
+              { title: 'Gallery', span: 'md:col-span-8', img: featureGallery, link: '/gallery', subtitle: 'Editorial Curations', imgPos: 'object-top' },
             ].map((item, i) => (
               <motion.div 
                 key={item.title} 
@@ -93,7 +101,7 @@ const Home = () => {
                 className={`${item.span} group relative overflow-hidden bg-surface-container-lowest rounded-xl shadow-md min-h-[350px] md:min-h-0`}
               >
                 <Link to={item.link} className="block w-full h-full">
-                    <img className="w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-105" alt={item.title} src={item.img}/>
+                    <img className={`w-full h-full object-cover ${item.imgPos || 'object-center'} transition-transform duration-[1.5s] ease-out group-hover:scale-105`} alt={item.title} src={item.img}/>
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-10 opacity-80 group-hover:opacity-100 transition-opacity duration-500">
                       <div className="text-white transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
                         <h3 className="editorial-title text-4xl mb-3">{item.title}</h3>

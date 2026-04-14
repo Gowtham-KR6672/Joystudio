@@ -49,13 +49,22 @@ const navData = [
   { label: 'Contact', path: '/contact' }
 ];
 
+const bottomNavItems = [
+  { label: 'Home', icon: 'home', path: '/' },
+  { label: 'Weddings', icon: 'favorite', path: '/services/weddings' },
+  { label: 'Baby', icon: 'child_care', path: '/services/baby' },
+  { label: 'Gallery', icon: 'photo_library', path: '/gallery' },
+  { label: 'Video', icon: 'videocam', path: '/video' },
+];
+
 const Navbar = () => {
   const { scrollY } = useScroll();
   const location = useLocation();
   const [isScrolled, setIsScrolled] = useState(false);
   const [hoveredMenu, setHoveredMenu] = useState(null);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [mobileOpenMenu, setMobileOpenMenu] = useState(null);
+  
+  // Mobile specific UI states
+  const [isFabOpen, setIsFabOpen] = useState(false);
   
   useEffect(() => {
     return scrollY.onChange((latest) => {
@@ -63,9 +72,9 @@ const Navbar = () => {
     });
   }, [scrollY]);
 
-  // Close mobile menu on route change
+  // Close menus on route change
   useEffect(() => {
-    setIsMobileMenuOpen(false);
+    setIsFabOpen(false);
   }, [location.pathname]);
 
   const navVariants = {
@@ -82,29 +91,22 @@ const Navbar = () => {
     visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
   };
 
-  const mobileMenuVariants = {
-    closed: { opacity: 0, x: '100%', transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } },
-    open: { opacity: 1, x: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1], staggerChildren: 0.08, delayChildren: 0.1 } }
-  };
-
-  const mobileLinkVariants = {
-    closed: { opacity: 0, x: 50 },
-    open: { opacity: 1, x: 0, transition: { duration: 0.5, ease: "easeOut" } }
-  };
-
   return (
     <>
+        {/* Top Navbar */}
         <motion.nav 
           initial="hidden"
           animate="visible"
           variants={navVariants}
-          className={`fixed top-0 w-full z-[60] transition-all duration-500 max-w-full glass-nav ${
-            isScrolled || isMobileMenuOpen ? 'bg-white/95 dark:bg-zinc-950/95 shadow-sm border-b border-outline-variant/20 py-4 supports-[backdrop-filter]:bg-white/80 supports-[backdrop-filter]:backdrop-blur-lg' : 'bg-transparent py-5 md:py-6'
+          className={`fixed top-0 w-full z-[60] transition-all duration-500 max-w-full glass-nav ${location.pathname === '/' ? 'hidden lg:block' : 'block'} ${
+            isScrolled 
+              ? 'bg-white/95 dark:bg-zinc-950/95 shadow-sm border-b border-outline-variant/20 py-4 supports-[backdrop-filter]:bg-white/80 supports-[backdrop-filter]:backdrop-blur-lg' 
+              : 'bg-transparent py-5 lg:py-4 lg:bg-white/95 lg:dark:bg-zinc-950/95 lg:shadow-sm lg:border-b lg:border-outline-variant/20 lg:supports-[backdrop-filter]:bg-white/80 lg:supports-[backdrop-filter]:backdrop-blur-lg'
           }`}
         >
           <div className="flex justify-between items-center px-6 md:px-8">
               <motion.div variants={itemVariants} className="text-2xl font-serif italic text-primary dark:text-primary-container relative group z-[70]">
-                <Link to="/" onClick={() => setIsMobileMenuOpen(false)}>Joy Studio</Link>
+                <Link to="/">Red Studio</Link>
                 <span className="absolute -bottom-1 left-0 w-0 h-px bg-primary transition-all duration-500 group-hover:w-full"></span>
               </motion.div>
               
@@ -158,86 +160,78 @@ const Navbar = () => {
                   <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out"></div>
                 </Link>
               </motion.div>
-
-              {/* Mobile Hamburger Toggle */}
-              <motion.button 
-                 variants={itemVariants}
-                 className="lg:hidden text-on-surface z-[70] p-2"
-                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              >
-                 <span className="material-symbols-outlined text-3xl font-light">
-                   {isMobileMenuOpen ? 'close' : 'menu'}
-                 </span>
-              </motion.button>
           </div>
         </motion.nav>
 
-        {/* Mobile Full Screen Menu Overlay */}
+        {/* Mobile Bottom Navigation Bar */}
+        <div className="fixed bottom-0 left-0 w-full z-[60] lg:hidden bg-white/95 dark:bg-zinc-950/95 border-t border-outline-variant/20 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] supports-[backdrop-filter]:bg-white/80 supports-[backdrop-filter]:backdrop-blur-lg px-2 pb-safe pt-2">
+            <div className="flex justify-around items-center h-16">
+                {bottomNavItems.map(item => {
+                    const isActive = location.pathname === item.path || (item.path !== '/' && location.pathname.startsWith(item.path));
+                    return (
+                        <Link 
+                            key={item.label} 
+                            to={item.path} 
+                            className={`flex flex-col items-center justify-center w-full h-full transition-colors duration-300 ${isActive ? 'text-primary' : 'text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200'}`}
+                        >
+                            <span className={`material-symbols-outlined text-2xl mb-1 ${isActive ? 'font-light' : 'font-extralight'}`}>{item.icon}</span>
+                            <span className="text-[10px] font-label font-medium tracking-wide">{item.label}</span>
+                        </Link>
+                    )
+                })}
+            </div>
+        </div>
+
+        {/* FAB SCROLL DIMMER */}
         <AnimatePresence>
-            {isMobileMenuOpen && (
-               <motion.div 
-                  initial="closed" 
-                  animate="open" 
-                  exit="closed" 
-                  variants={mobileMenuVariants}
-                  className="fixed inset-0 bg-surface dark:bg-zinc-950 z-[50] flex flex-col pt-28 pb-12 px-6 md:px-12 overflow-y-auto"
-               >
-                  {navData.map((item, idx) => (
-                     <motion.div key={idx} variants={mobileLinkVariants} className="mb-4">
-                         <div 
-                            className="flex justify-between items-center border-b border-outline-variant/30 py-4 cursor-pointer group"
-                            onClick={() => {
-                                if (item.subItems) {
-                                    setMobileOpenMenu(mobileOpenMenu === item.label ? null : item.label);
-                                } else {
-                                    setIsMobileMenuOpen(false);
-                                }
-                            }}
-                         >
-                             <Link to={item.subItems ? '#' : item.path} className="text-3xl font-serif text-on-surface group-hover:text-primary transition-colors">{item.label}</Link>
-                             {item.subItems && (
-                                <motion.span 
-                                    animate={{ rotate: mobileOpenMenu === item.label ? 180 : 0 }}
-                                    className="material-symbols-outlined text-zinc-400 group-hover:text-primary transition-colors"
-                                >
-                                    expand_more
-                                </motion.span>
-                             )}
-                         </div>
-                         <AnimatePresence>
-                            {item.subItems && mobileOpenMenu === item.label && (
-                               <motion.div 
-                                  initial={{ height: 0, opacity: 0 }}
-                                  animate={{ height: 'auto', opacity: 1 }}
-                                  exit={{ height: 0, opacity: 0 }}
-                                  className="flex flex-col gap-4 overflow-hidden bg-zinc-50 dark:bg-zinc-900 rounded-lg mt-2"
-                               >
-                                 <div className="py-6 px-6 flex flex-col gap-5">
-                                     {item.subItems.map(sub => (
-                                        <Link 
-                                            key={sub.label} 
-                                            to={sub.path} 
-                                            onClick={() => setIsMobileMenuOpen(false)} 
-                                            className="text-sm font-label tracking-widest uppercase text-zinc-600 dark:text-zinc-400 hover:text-primary transition-colors"
-                                        >
-                                          {sub.label}
-                                        </Link>
-                                     ))}
-                                 </div>
-                               </motion.div>
-                            )}
-                         </AnimatePresence>
-                     </motion.div>
-                  ))}
-                  
-                  <motion.div variants={mobileLinkVariants} className="mt-8">
-                     <Link to="/booking" onClick={() => setIsMobileMenuOpen(false)} className="relative overflow-hidden group bg-gradient-to-r from-primary to-primary-container text-on-primary px-8 py-4 rounded text-sm font-label tracking-widest uppercase transition-all shadow-lg shadow-primary/20 hover:shadow-primary/40 block text-center">
-                        <span className="relative z-10">Reserve Your Session</span>
-                    </Link>
-                  </motion.div>
-               </motion.div>
+            {isFabOpen && (
+                <motion.div 
+                    initial={{ opacity: 0 }} 
+                    animate={{ opacity: 1 }} 
+                    exit={{ opacity: 0 }} 
+                    onClick={() => setIsFabOpen(false)}
+                    className="fixed inset-0 bg-surface/60 z-[65] lg:hidden supports-[backdrop-filter]:backdrop-blur-sm"
+                />
             )}
         </AnimatePresence>
+
+        {/* Mobile Floating Action Button & Menu */}
+        <div className="fixed bottom-[90px] right-4 z-[70] lg:hidden flex flex-col items-end gap-4 pointer-events-none">
+            <AnimatePresence>
+                {isFabOpen && (
+                    <motion.div 
+                        initial={{ opacity: 0, y: 20, scale: 0.9 }} 
+                        animate={{ opacity: 1, y: 0, scale: 1 }} 
+                        exit={{ opacity: 0, y: 20, scale: 0.9 }}
+                        transition={{ duration: 0.2 }}
+                        className="pointer-events-auto flex flex-col items-end gap-1 bg-white/95 dark:bg-zinc-900/95 shadow-2xl border border-outline-variant/20 rounded-2xl p-4 supports-[backdrop-filter]:backdrop-blur-lg min-w-[180px]"
+                    >
+                        <span className="font-label text-[10px] text-zinc-400 uppercase tracking-widest mb-2 px-2 border-b border-outline-variant/20 pb-2 w-full text-right">More</span>
+                        <Link to="/about" className="py-2.5 px-3 w-full text-right text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:text-primary transition-colors flex items-center justify-end gap-3 rounded hover:bg-zinc-50 dark:hover:bg-zinc-800"> About Us <span className="material-symbols-outlined text-zinc-400 text-lg">info</span></Link>
+                        <Link to="/packages" className="py-2.5 px-3 w-full text-right text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:text-primary transition-colors flex items-center justify-end gap-3 rounded hover:bg-zinc-50 dark:hover:bg-zinc-800"> Packages <span className="material-symbols-outlined text-zinc-400 text-lg">local_offer</span></Link>
+                        <Link to="/careers" className="py-2.5 px-3 w-full text-right text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:text-primary transition-colors flex items-center justify-end gap-3 rounded hover:bg-zinc-50 dark:hover:bg-zinc-800"> Careers & Jobs <span className="material-symbols-outlined text-zinc-400 text-lg">work</span></Link>
+                        <Link to="/team" className="py-2.5 px-3 w-full text-right text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:text-primary transition-colors flex items-center justify-end gap-3 rounded hover:bg-zinc-50 dark:hover:bg-zinc-800"> Team Mates <span className="material-symbols-outlined text-zinc-400 text-lg">groups</span></Link>
+                        <div className="h-px bg-outline-variant/30 w-full my-1"></div>
+                        <Link to="/contact" className="py-2 px-3 w-full text-right text-sm font-medium text-primary hover:text-primary-container transition-colors flex items-center justify-end gap-3 rounded hover:bg-primary/5"> Contact <span className="material-symbols-outlined text-lg">mail</span></Link>
+                        <div className="h-px bg-outline-variant/30 w-full my-1"></div>
+                        <Link to="/booking" className="py-2 px-3 w-full text-right text-sm font-bold text-on-surface hover:text-primary transition-colors flex items-center justify-end gap-3 rounded hover:bg-zinc-50 dark:hover:bg-zinc-800"> Reserve Session <span className="material-symbols-outlined text-lg">calendar_month</span></Link>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            <button 
+                onClick={() => setIsFabOpen(!isFabOpen)}
+                className="pointer-events-auto w-14 h-14 rounded-full bg-primary text-on-primary shadow-[0_8px_30px_rgba(0,0,0,0.2)] flex items-center justify-center transition-transform duration-300 hover:scale-105 active:scale-95 border-2 border-white/20"
+            >
+                <motion.span 
+                    animate={{ rotate: isFabOpen ? 45 : 0 }} 
+                    className="material-symbols-outlined text-2xl leading-none font-light"
+                    style={{ display: 'block' }}
+                >
+                    add
+                </motion.span>
+            </button>
+        </div>
     </>
   );
 };

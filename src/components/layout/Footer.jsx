@@ -8,7 +8,7 @@ const Footer = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-12 px-12 py-16 border-t border-zinc-200/50 dark:border-zinc-800/50">
         {/* Brand Column */}
         <div className="space-y-6">
-          <div className="text-lg font-serif text-primary dark:text-primary-container">Joy Studio</div>
+          <div className="text-lg font-serif text-primary dark:text-primary-container">Red Studio</div>
           <p className="font-sans text-xs tracking-wider text-zinc-500 leading-relaxed max-w-xs">
             The premier destination for high-end editorial photography and cinematic storytelling.
           </p>
@@ -46,7 +46,7 @@ const Footer = () => {
             <a href="tel:+916384183245" className="font-sans text-xs tracking-wider text-zinc-500 hover:text-primary block">+91 63841 83245</a>
           </div>
           <div className="pt-4">
-            <p className="font-sans text-[10px] tracking-widest text-zinc-400 uppercase">© {new Date().getFullYear()} Joy Studio. All rights reserved.</p>
+            <p className="font-sans text-[10px] tracking-widest text-zinc-400 uppercase">© {new Date().getFullYear()} Red Studio. All rights reserved.</p>
           </div>
         </div>
       </div>
